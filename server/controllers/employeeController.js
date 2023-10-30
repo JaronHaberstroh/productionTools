@@ -1,15 +1,9 @@
 import Employee from "../models/employee.js";
+import { employeeDataMap } from "../utils/reqDataMap.js";
 
 export const getEmployeesList = async (req, res) => {
   try {
-    const employeeInfo = {
-      firstName: req.body.fName,
-      lastName: req.body.lName,
-      employeeNumber: req.body.employeeNumber,
-      startDate: req.body.startDate,
-      shift: req.body.shift,
-      currentPosition: req.body.currentPosition,
-    };
+    const employeeInfo = employeeDataMap(req.body);
 
     const employeesList = await Employee.find(employeeInfo);
 
@@ -23,20 +17,13 @@ export const getEmployeesList = async (req, res) => {
 
 export const addEmployee = async (req, res) => {
   try {
-    const employeeInfo = {
-      firstName: req.body.fName,
-      lastName: req.body.lName,
-      employeeNumber: req.body.employeeNumber,
-      startDate: req.body.startDate,
-      shift: req.body.shift,
-      currentPosition: req.body.currentPosition,
-    };
+    const employeeInfo = employeeDataMap(req.body);
 
     const employee = new Employee(employeeInfo);
 
     await employee.save();
 
-    res.status(201).json({ message: "New Employee added to DB.", employee });
+    res.status(201).json({ message: "New Employee added to DB." });
   } catch (err) {
     res
       .status(500)
@@ -61,14 +48,7 @@ export const deleteEmployee = async (req, res) => {
 export const editEmployee = async (req, res) => {
   try {
     const query = { _id: req.params.id };
-    const employee = {
-      firstName: req.body.fName,
-      lastName: req.body.lName,
-      employeeNumber: req.body.employeeNumber,
-      startDate: req.body.startDate,
-      shift: req.body.shift,
-      currentPosition: req.body.currentPosition,
-    };
+    const employee = employeeDataMap(req.body);
     await Employee.findOneAndUpdate(query, employee);
     res.status(200).json({ message: "Employee data updated." });
   } catch (err) {
