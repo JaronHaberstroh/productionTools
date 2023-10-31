@@ -1,21 +1,15 @@
 import mongoose, { Schema } from "mongoose";
 
 const productionLineSchema = new Schema({
-  department: [
-    {
-      departmentName: String,
-      line: [
-        {
-          lineName: String,
-          position: [
-            {
-              positionName: String,
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  name: {
+    type: String,
+    required: true,
+  },
+  department: {
+    type: String,
+    enum: ["Hot End", "Cold End", "Lamination"],
+    required: true,
+  },
 });
 
 const ProductionLine = mongoose.model("ProductionLine", productionLineSchema);

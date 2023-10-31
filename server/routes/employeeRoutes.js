@@ -1,11 +1,11 @@
 import express from "express";
-import * as employeeController from "../controllers/employeeController.js";
+import * as userController from "../controllers/employeeController.js";
 
 const router = express.Router();
 
-router.get("/find", employeeController.getEmployeesList);
-router.post("/create", employeeController.addEmployee);
-router.put("/edit", employeeController.editEmployee);
-router.delete("/delete", employeeController.deleteEmployee);
+router.get("/find", userController.getEmployeesList);
+router.post("/create", userController.addEmployee);
+router.put("/edit", userController.editEmployee);
+router.delete("/delete", userController.deleteEmployee);
 
 export default router;
