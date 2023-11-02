@@ -1,4 +1,4 @@
-import { sendData } from "@/lib/api/employeeApi";
+import { sendData } from "@/lib/api/userApi";
 import { useEffect, useRef, useState } from "react";
 import formFields from "@/lib/utils/formFields";
 import styles from "./forms.module.css";
@@ -31,7 +31,7 @@ export default function EmployeeForm() {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    await sendData("employee/create", formData);
+    await sendData("user/create", formData);
     setFormData((prevValue) => ({
       ...prevValue,
       fName: "",

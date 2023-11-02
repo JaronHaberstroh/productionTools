@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchData } from "../lib/api/employeeApi.jsx";
+import { fetchData } from "../lib/api/userApi.js";
 
 const response = await fetchData("/employee");
 
