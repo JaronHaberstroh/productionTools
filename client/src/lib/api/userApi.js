@@ -7,9 +7,10 @@ const instance = axios.create({
 export const fetchData = async (endpoint) => {
   try {
     const response = await instance.get(endpoint);
+
     return response.data;
   } catch (err) {
-    throw err;
+    console.error("Error: ", err);
   }
 };
 

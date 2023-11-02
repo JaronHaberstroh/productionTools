@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const userRoleSchema = new Schema({
-  isSupervisor: {
+  isSuper: {
     type: Boolean,
     default: false,
   },
@@ -9,18 +9,14 @@ const userRoleSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  canLogin: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 const userSchema = new Schema({
-  firstName: {
+  fName: {
     type: String,
     required: true,
   },
-  lastName: {
+  lName: {
     type: String,
     required: true,
   },
@@ -28,19 +24,32 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
-  startDate: Date,
+  startDate: {
+    type: Date,
+    required: false,
+  },
   shift: {
     type: String,
+    required: true,
   },
   currentPosition: {
     type: String,
     default: "Laborer",
+    required: false,
+  },
+  department: {
+    type: String,
+    enum: ["Hot End", "Cold End", "Lamination", "inGeneralFactory"],
+    default: "inGeneralFactory",
   },
   userRole: {
-    type: userRoleSchema,
+    type: [userRoleSchema],
     required: false,
   },
 });
 
 const User = mongoose.model("User", userSchema);
+
+export const userDataFields = Object.keys(User.schema.paths);
+
 export default User;
