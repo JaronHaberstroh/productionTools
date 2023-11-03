@@ -1,17 +1,61 @@
-export default [
-  { name: "fName", type: "text", placeholder: "First Name: " },
-  { name: "lName", type: "text", placeholder: "Last Name: " },
-  { name: "employeeNumber", type: "text", placeholder: "Employee Number: " },
+export const createUser = [
+  { type: "text", name: "fName", label: "First Name: " },
+  { type: "text", name: "lName", label: "Last Name: " },
   {
-    name: "currentPosition",
     type: "text",
-    placeholder: "Current Position: ",
+    name: "employeeNumber",
+    label: "Employee Number: ",
   },
-  { name: "startDate", type: "date", placeholder: "Start Date: " },
+  { type: "date", name: "startDate", label: "Start Date: " },
   {
-    name: "shift",
     type: "radio",
-    placeholder: "Shift",
+    name: "shift",
+    label: "Shift: ",
     options: ["A", "B", "C", "D"],
+  },
+];
+
+export const updateUser = [
+  { type: "text", name: "fName", label: "First Name: " },
+  { type: "text", name: "lName", label: "Last Name: " },
+  {
+    type: "text",
+    name: "employeeNumber",
+    label: "Employee Number: ",
+  },
+  { type: "date", name: "startDate", label: "Start Date: " },
+  {
+    type: "radio",
+    name: "shift",
+    label: "Shift: ",
+    options: ["A", "B", "C", "D"],
+  },
+  {
+    type: "section",
+    name: "department",
+    label: "Department: ",
+    options: [1, 2, 3],
+  },
+  {
+    type: "section",
+    name: "currentPosition",
+    label: "Current Position",
+    options: [1, 2, 3],
+  },
+  {
+    type: "section",
+    name: "userRoles",
+    label: "User Roles",
+    options: [1, 2, 3],
+  },
+];
+
+export const deleteUser = [
+  { type: "text", name: "fName", label: "First Name: " },
+  { type: "text", name: "lName", label: "Last Name: " },
+  {
+    type: "text",
+    name: "employeeNumber",
+    label: "Employee Number: ",
   },
 ];
