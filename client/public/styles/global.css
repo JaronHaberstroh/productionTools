@@ -1,3 +1,29 @@
+:root {
+  --main-background-color: #DDE0E3;
+  --background-color: #EBEBEB;
+  --border-color: #322E20;
+  --shadow-color: #322E20;
+  --section-border-color: #EAD6C3;
+  --section-legend-color: #1D242B;
+  --label-color: #1D242B;
+  --input-background: #F5F5F5;
+  --input-border: #191710;
+  --input-focus-border: #552543;
+  --input-focus-shadow: #552543;
+  --radio-border: #322E20;
+  --radio-background: #065A82;
+  --radio-shadow: #322E20;
+  --radio-hover-border: #3CBBF6;
+  --radio-hover-background: #3CBBF6;
+  --radio-hover-shadow: #322E20;
+  --button-background: #065A82;
+  --button-text: #FAFAFA;
+  --button-shadow: #322E20;
+  --button-hover-background: #0BA3EA;
+  --button-hover-text: #1D242B;
+  --button-hover-shadow: #322E20;
+}
+
 html,
 body {
   padding: 0;
@@ -5,9 +31,5 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
     Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   font-size: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #DDE0E3;
+  background-color: var(--main-background-color);
 }
-

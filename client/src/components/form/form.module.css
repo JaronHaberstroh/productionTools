@@ -1,0 +1,113 @@
+/* Centering Parent Container Styles */
+.centerContainer {
+  display: flex;
+  justify-content: center;
+}
+
+/* Container Styles */
+.formContainer {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  margin-top: 40px;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px var(--shadow-color);
+}
+
+/* Child Container Styles */
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--section-border-color);
+  border-radius: 5px;
+  font-size: .9rem;
+}
+
+.formSection fieldset {
+  display: flex;
+  align-items: center;
+  width: 93%;
+  border: none;
+}
+
+.formSection legend {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--section-legend-color);
+}
+
+.formSection label {
+  font-weight: bold;
+  color: var(--label-color);
+}
+
+.formSection input {
+  padding: 10px;
+  background-color: var(--input-background);
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  width: 93%;
+}
+
+.formSection input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 5px var(--input-focus-shadow);
+  background-color: #FFF;
+  outline: none;
+}
+
+/* Radio Container Styles */
+.radioGroup {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.radioGroup input[type="radio"] {
+  appearance: none;
+  padding: 5px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--radio-border);
+  background-color: var(--radio-background);
+  border-radius: 50%;
+  box-shadow: 2px 2px 3px -1px var(--radio-shadow);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.radioGroup input[type="radio"]:hover,
+.radioGroup input[type="radio"]:checked {
+  border: 1px solid var(--radio-hover-border);
+  background-color: var(--radio-hover-background);
+  box-shadow: inset 1px 1px 5px -1px var(--radio-hover-shadow);
+  outline: none;
+}
+
+/* Button Styles */
+.formButton {
+  background-color: var(--button-background);
+  color: var(--button-text);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-shadow: 2px 2px 3px -1px var(--button-shadow);
+  transition: all 0.7s ease-in-out;
+}
+
+.formButton:hover,
+.formButton:focus {
+  background-color: var(--button-hover-background);
+  color: var(--button-hover-text);
+  box-shadow: inset 1px 1px 5px 1px var(--button-hover-shadow);
+  outline: none;
+}
