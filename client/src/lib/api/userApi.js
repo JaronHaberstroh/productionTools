@@ -7,8 +7,11 @@ const instance = axios.create({
 export const fetchData = async (endpoint) => {
   try {
     const response = await instance.get(endpoint);
+    if (response.status === 200) {
+      console.log("Data sent successfully", JSON.stringify(response.data));
 
-    return response.data;
+      return response.data;
+    }
   } catch (err) {
     console.error("Error: ", err);
   }
@@ -22,7 +25,7 @@ export const sendData = async (endpoint, formData) => {
       },
     });
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       console.log("Data sent successfully", JSON.stringify(response.data));
     }
   } catch (err) {
