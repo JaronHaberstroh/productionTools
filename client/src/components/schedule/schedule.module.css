@@ -1,0 +1,17 @@
+.schedule {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding-right: 5px;
+  padding-left: 5px;
+  background-color: var(--background-color);
+}
+
+.section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+
+}

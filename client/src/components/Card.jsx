@@ -3,12 +3,16 @@ const Card = (props) => {
     border: "1px solid var(--border-color)",
     borderRadius: "10px",
     padding: "5px",
+    display: "flex",
+    gap: "5px",
+    justifyContents: "center",
+    alignItems: "center",
   };
 
   return (
     <div style={style}>
-      <div>{props.title}</div>
-      {props.children}
+      <h3>{props.title}</h3>
+      <p>{props.children}</p>
     </div>
   );
 };

@@ -4,10 +4,10 @@ const Container = (props) => {
     display: "flex",
     flexDirection: "column",
     gap: "5px",
-    width: "200px",
     borderRadius: "10px",
     padding: "5px",
   };
+
   return <div style={style}>{props.children}</div>;
 };
 
