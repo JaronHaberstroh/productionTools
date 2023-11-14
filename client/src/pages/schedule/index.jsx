@@ -43,28 +43,7 @@ export default function HomePage() {
           shift="B"
           time="6PM to 6AM"
           dateRange="5/1/23 - 5/14/23"
-          coldEnds={Object.entries(containers.coldEnds).map(([key, values]) => (
-            <Container key={`container_${key}`}>
-              <Droppable
-                key={key}
-                id={`coldEnd${key}`}
-                containerId="coldEnds"
-                lineNumber={key}
-              >
-                <div>{key}</div>
-                {values.map((employee) => (
-                  <Draggable
-                    key={employee.id}
-                    id={employee.id}
-                    containerId={"coldEnds"}
-                    lineNumber={key}
-                  >
-                    {employee.fullName}
-                  </Draggable>
-                ))}
-              </Droppable>
-            </Container>
-          ))}
+          sections={containers}
         ></ScheduleContainer>
       </div>
     </DndContext>
