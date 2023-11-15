@@ -3,19 +3,22 @@
   flex-direction: column;
   border: 2px solid var(--border-color);
   border-radius: 10px;
-  padding-right: 5px;
-  padding-left: 5px;
+  padding: 5px;
   background-color: var(--background-color);
   box-shadow: 1px 1px 4px 1px var(--shadow-color);
+  gap: 5px;
 }
 
 .section {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   justify-content: space-between;
   align-items: center;
+}
+
+.section:not(:last-child) {
   border-bottom: 1px solid var(--border-color);
-  padding: 8px;
+  padding-bottom: 4px;
 }
 
 .lineContainer {
@@ -24,5 +27,8 @@
   flex: 1;
   border: 2px solid var(--border-color);
   border-radius: 10px;
+  gap: 2px;
+  padding: 2px;
   min-height: 100px;
+  max-width: calc(25% - 80px);
 }
