@@ -1,0 +1,11 @@
+.section {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.section:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 4px;
+}
+

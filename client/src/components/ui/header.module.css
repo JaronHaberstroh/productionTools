@@ -1,0 +1,7 @@
+.title {
+  font-size: 1.3rem;
+  text-align: center;
+  text-decoration: underline;
+  color: var(--label-color);
+  font-weight: 700;
+}

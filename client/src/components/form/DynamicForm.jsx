@@ -6,7 +6,7 @@ import DateInput from "@/components/form/formInput/DateInput";
 import RadioInput from "@/components/form/formInput/RadioInput";
 import SectionInput from "./formInput/SectionInput";
 
-const DynamicForm = ({ legendText, buttonText, formFields }) => {
+export default function DynamicForm({ legendText, buttonText, formFields }) {
   const inputRef = useRef(null);
 
   const initialState = formFields.reduce((acc, field) => {
@@ -27,18 +27,6 @@ const DynamicForm = ({ legendText, buttonText, formFields }) => {
     }
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevValues) => ({ ...prevValues, [name]: value }));
-  };
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    sendData("user/create", formData);
-    setFormData(initialState);
-    inputRef.current.focus();
-  };
-
   return (
     <div className={styles.centerContainer}>
       <form className={styles.formContainer}>
@@ -51,7 +39,7 @@ const DynamicForm = ({ legendText, buttonText, formFields }) => {
                   name={field.name}
                   label={field.label}
                   value={formData[field.name]}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setFormData)}
                   ref={field.name === "fName" ? inputRef : null}
                 />
               )}
@@ -60,7 +48,7 @@ const DynamicForm = ({ legendText, buttonText, formFields }) => {
                   name={field.name}
                   label={field.label}
                   value={formData[field.name]}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setFormData)}
                 />
               )}
 
@@ -71,7 +59,7 @@ const DynamicForm = ({ legendText, buttonText, formFields }) => {
                     label={field.label}
                     radioOptions={field.options}
                     checked={formData[field.name]}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e, setFormData)}
                   />
                 </div>
               )}
@@ -81,18 +69,47 @@ const DynamicForm = ({ legendText, buttonText, formFields }) => {
                   label={field.label}
                   sectionOptions={field.options}
                   checked={formData[field.name]}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setFormData)}
                 />
               )}
             </fieldset>
           ))}
         </fieldset>
-        <button className={styles.formButton} onClick={handleClick}>
+        <button
+          className={styles.formButton}
+          onClick={(e) =>
+            handleClick(
+              e,
+              formData,
+              setFormData,
+              initialState,
+              sendData,
+              inputRef
+            )
+          }
+        >
           {buttonText}
         </button>
       </form>
     </div>
   );
-};
+}
 
-export default DynamicForm;
+function handleClick(
+  e,
+  formData,
+  setFormData,
+  initialState,
+  sendData,
+  inputRef
+) {
+  e.preventDefault();
+  sendData("user/create", formData);
+  setFormData(initialState);
+  inputRef.current.focus();
+}
+
+function handleChange(e, setFormData) {
+  const { name, value } = e.target;
+  setFormData((prevValues) => ({ ...prevValues, [name]: value }));
+}

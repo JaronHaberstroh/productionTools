@@ -1,35 +1,35 @@
 import { useEffect, useState } from "react";
 import useDndContainers from "@/lib/hooks/useDndContainers";
 
-import Draggable from "@/components/dnd/Draggable";
-import Droppable from "@/components/dnd/Droppable";
 import ScheduleContainer from "@/components/schedule/ScheduleContainer";
 import EmployeeList from "@/components/employeeList/EmployeeList";
+import Layout from "@/components/layout/layout";
+import { Item } from "@/components/dragAndDrop/DraggableItem";
 
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 
 import { fetchData } from "@/lib/api/userApi";
-import Container from "@/components/Container";
 
 export default function HomePage() {
-  const [employeeList, setEmployeeList] = useState([]);
-  const [containers, setContainers, handleDragEnd] =
-    useDndContainers(employeeList);
+  const [activeId, setActiveId] = useState(null);
+  const [scheduleDate, updateStartDate] = useManageTime();
 
-  const wrapperStyle = {
-    display: "grid",
-    gridTemplate: "1fr / 200px auto",
-    margin: "8px",
-    gap: "10px",
-  };
+  const [employeeList, setEmployeeList] = useState([]);
+  const [containers, setContainers, handleDragEnd] = useDndContainers(
+    employeeList,
+    setActiveId
+  );
 
   useEffect(() => {
     fetchDataFromServer(setEmployeeList, setContainers);
   }, []);
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      <div style={wrapperStyle}>
+    <Layout>
+      <DndContext
+        onDragEnd={handleDragEnd}
+        onDragStart={(e) => handleDragStart(e, setActiveId)}
+      >
         <EmployeeList
           key="employeeList"
           id="employeeList"
@@ -40,14 +40,32 @@ export default function HomePage() {
         />
 
         <ScheduleContainer
+          key="scheduleContainer"
+          id="scheduleContainer"
           shift="B"
           time="6PM to 6AM"
-          dateRange="5/1/23 - 5/14/23"
-          sections={containers}
-        ></ScheduleContainer>
-      </div>
-    </DndContext>
+          dateRange={`${scheduleDate.startDate.toLocaleDateString()} - ${scheduleDate.endDate.toLocaleDateString()}`}
+          sections={filterObjectByKey(containers, "employeeList")}
+          empty="Operator: Unassigned"
+        />
+        {/* TODO: Fix Broken DragOverlay */}
+        <DragOverlay>
+          {activeId ? (
+            <Item
+              key={`DragOverlay_${activeId}`}
+              id={`DragOverlay_${activeId}`}
+            >
+              {employeeList.fullName}
+            </Item>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </Layout>
   );
+}
+
+function handleDragStart(e, setActiveId) {
+  setActiveId(e.active.id);
 }
 
 async function fetchDataFromServer(setEmployeeList, setContainers) {
@@ -68,4 +86,36 @@ async function fetchDataFromServer(setEmployeeList, setContainers) {
   } catch (err) {
     console.error(err);
   }
+}
+
+function filterObjectByKey(obj, excludedKey) {
+  const { [excludedKey]: omit, ...result } = obj;
+  return result;
+}
+
+function useManageTime() {
+  const [scheduleDate, setScheduleDate] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
+
+  useEffect(() => {
+    const newEndDate = new Date(scheduleDate.startDate);
+    newEndDate.setDate(scheduleDate.startDate.getDate() + 13);
+
+    setScheduleDate((prevDate) => ({
+      ...prevDate,
+      endDate: newEndDate,
+    }));
+  }, [scheduleDate.startDate]);
+
+  function updateStartDate() {
+    const newStartDate = new Date();
+    const newEndDate = new Date(scheduleDate.startDate);
+    newEndDate.setDate(scheduleDate.startDate.getDate() + 13);
+
+    setScheduleDate({ startDate: newStartDate, endDate: newEndDate });
+  }
+
+  return [scheduleDate, updateStartDate];
 }

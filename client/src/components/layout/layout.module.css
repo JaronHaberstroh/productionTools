@@ -1,0 +1,6 @@
+.layout {
+  display: grid;
+  grid-template: auto / 200px auto;
+  gap: 12px;
+  margin: calc(100vh/30) 12px 0 12px;
+}
