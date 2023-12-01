@@ -2,12 +2,16 @@ import { useState } from "react";
 
 export default function useDndContainers(employeeList) {
   const coldEndGroup = ["2", "3", "4", "6", "8", "7", "9", "10", "11", "12"];
+  const coldEndLinePositions = ["Oper", "Insp"];
   const hotEndGroup = ["1", "3", "9", "11"];
+  const hotEndLinePositions = ["Oper", "Util", "SSR-Oper", "Insp"];
 
   const initialState = {
+    supervisorList: [],
     employeeList: [],
-    coldEnds: createGroupInitialState(coldEndGroup),
-    hotEnds: createGroupInitialState(hotEndGroup),
+    absentList: [],
+    coldEnds: createGroupInitialState(coldEndGroup, coldEndLinePositions),
+    hotEnds: createGroupInitialState(hotEndGroup, hotEndLinePositions),
   };
 
   const [containers, setContainers] = useState(initialState);
@@ -19,9 +23,7 @@ export default function useDndContainers(employeeList) {
     if (!over) return;
 
     // Find the dragged item in list
-    const draggedEmployee = employeeList.find(
-      (employee) => employee.id === active.id
-    );
+    const draggedEmployee = findEmployee(employeeList, active);
 
     // Get source and destination info
     const sourceInfo = getSourceInfo(active.data);
@@ -30,7 +32,8 @@ export default function useDndContainers(employeeList) {
     // Check if source and destination are the same
     if (
       sourceInfo.containerId === destinationInfo.containerId &&
-      sourceInfo.lineNumber === destinationInfo.lineNumber
+      sourceInfo.lineNumber === destinationInfo.lineNumber &&
+      sourceInfo.position === destinationInfo.position
     ) {
       return;
     }
@@ -51,62 +54,79 @@ export default function useDndContainers(employeeList) {
     });
   }
 
-  function createGroupInitialState(groupList) {
-    return groupList.reduce((acc, line) => {
-      return { ...acc, [line]: [] };
-    }, {});
-  }
-
-  function getSourceInfo(data) {
-    return {
-      containerId: data.current.containerId,
-      lineNumber: data.current.lineNumber,
-    };
-  }
-
-  function callUpdateContainers(
-    updatedContainers,
-    sourceInfo,
-    destinationInfo,
-    draggedEmployee
-  ) {
-    // Function to update containers
-    function updateContainer(
-      updatedContainers,
-      containerId,
-      lineNumber,
-      operation
-    ) {
-      const container = updatedContainers[containerId];
-
-      updatedContainers[containerId] =
-        containerId === "employeeList"
-          ? operation(container)
-          : {
-              ...container,
-              [lineNumber]: operation(container[lineNumber], lineNumber),
-            };
-
-      return updatedContainers;
-    }
-
-    // Remove the dragged employee from the source container
-    updateContainer(
-      updatedContainers,
-      sourceInfo.containerId,
-      sourceInfo.lineNumber,
-      (container) =>
-        container.filter((employee) => employee.id !== draggedEmployee.id)
-    );
-
-    // Add the dragged employee to the destination container
-    updateContainer(
-      updatedContainers,
-      destinationInfo.containerId,
-      destinationInfo.lineNumber,
-      (container) => [...container, draggedEmployee]
-    );
-  }
-
   return [containers, setContainers, handleDragEnd];
+}
+
+export function findEmployee(employeeList, active) {
+  return employeeList.find((employee) => employee.id === active.id);
+}
+
+export function getSourceInfo(data) {
+  return {
+    containerId: data.current.containerId,
+    lineNumber: data.current.lineNumber,
+    position: data.current.position,
+  };
+}
+
+export function createGroupInitialState(groupList, linePositions) {
+  return groupList.reduce((acc, line) => {
+    const positionsObject = linePositions.reduce((positionsAcc, position) => {
+      return { ...positionsAcc, [position]: [] };
+    }, {});
+    return { ...acc, [line]: positionsObject };
+  }, {});
+}
+
+function callUpdateContainers(
+  updatedContainers,
+  sourceInfo,
+  destinationInfo,
+  draggedEmployee
+) {
+  // Function to update containers
+  function updateContainer(
+    updatedContainers,
+    containerId,
+    lineNumber,
+    position,
+    operation
+  ) {
+    const container = updatedContainers[containerId];
+
+    updatedContainers[containerId] =
+      containerId === "employeeList" ||
+      containerId === "absentList" ||
+      containerId === "supervisorList"
+        ? operation(container)
+        : {
+            ...container,
+            [lineNumber]: {
+              ...container[lineNumber],
+              [position]: operation(container[lineNumber][position], position),
+            },
+          };
+
+    return updatedContainers;
+  }
+
+  // Remove the dragged employee from the source container
+  updateContainer(
+    updatedContainers,
+    sourceInfo.containerId,
+    sourceInfo.lineNumber,
+    sourceInfo.position,
+    (container) =>
+      container.filter((employee) => employee.id !== draggedEmployee.id)
+  );
+
+  // Add the dragged employee to the destination container
+  updateContainer(
+    updatedContainers,
+    destinationInfo.containerId,
+    destinationInfo.lineNumber,
+    destinationInfo.position,
+    (container) => [...container, draggedEmployee]
+  );
+  return updatedContainers;
 }

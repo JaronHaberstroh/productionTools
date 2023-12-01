@@ -1,14 +1,12 @@
-import { useDroppable, DragOverlay } from "@dnd-kit/core";
-import DraggableItem from "@/components/dragAndDrop/DraggableItem";
+import { useDroppable } from "@dnd-kit/core";
 import styles from "./droppableContainer.module.css";
 
 export default function DroppableContainer(props) {
+  const { id, containerId, lineNumber, position, className } = props;
+
   const { isOver, setNodeRef } = useDroppable({
-    id: props.id,
-    data: {
-      containerId: props.containerId,
-      lineNumber: props.lineNumber,
-    },
+    id: id,
+    data: { containerId, lineNumber, position },
   });
 
   const style = {
@@ -18,29 +16,20 @@ export default function DroppableContainer(props) {
   return (
     <>
       <div
-        key={`${props.containerId}_${props.lineNumber}`}
-        id={`${props.containerId}_${props.lineNumber}`}
-        className={styles.itemsContainer}
+        key={generateKey(props)}
+        id={generateKey(props)}
+        className={`${styles.itemsContainer} ${className}`}
         style={style}
         ref={setNodeRef}
       >
-        {props.items.length !== 0 ? (
-          props.items.map((item) => (
-            <>
-              <DraggableItem
-                key={item.id}
-                id={item.id}
-                containerId={props.containerId}
-                lineNumber={props.lineNumber}
-              >
-                {item.fullName}
-              </DraggableItem>
-            </>
-          ))
-        ) : (
-          <div className={styles.empty}>{props.empty}</div>
-        )}
+        {props.children}
       </div>
     </>
   );
+}
+
+function generateKey(props) {
+  const { containerId, lineNumber, position } = props;
+
+  return `${containerId}_${lineNumber}_${position}`;
 }

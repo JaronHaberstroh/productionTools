@@ -1,35 +1,92 @@
-import styles from "./draggableItem.module.css";
 import { useDraggable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
+import styles from "./draggableItem.module.css";
 
-export default function DroppableItem(props) {
-  const Element = props.element || "div";
-
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: props.id,
-      data: {
-        containerId: props.containerId,
-        lineNumber: props.lineNumber,
-        fullName: props.children,
-      },
-    });
-
-  const style = transform
-    ? {
-        transform: CSS.Translate.toString(transform),
-        opacity: "0.7",
-        cursor: isDragging ? "grabbing" : "grab",
-      }
-    : undefined;
+export default function DraggableItem(props) {
+  const { id, containerId, lineNumber, position, children, element } = props;
 
   return (
-    <Element ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <Item>{props.children}</Item>
+    <DraggableContainer
+      key={id}
+      id={id}
+      containerId={containerId}
+      lineNumber={lineNumber}
+      position={position}
+      element={element}
+    >
+      <Item>{children}</Item>
+    </DraggableContainer>
+  );
+}
+
+export function DraggableContainer(props) {
+  const {
+    id,
+    containerId,
+    lineNumber,
+    position,
+    children,
+    element: Element = "div",
+  } = props;
+
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: id,
+    data: { containerId, lineNumber, position },
+  });
+
+  return (
+    <Element key={id} id={id} ref={setNodeRef} {...listeners} {...attributes}>
+      {children}
     </Element>
   );
 }
 
 export function Item(props) {
-  return <div className={styles.item}>{props.children}</div>;
+  const { children } = props;
+
+  return <div className={styles.item}>{children}</div>;
 }
+
+export function EmptyItem(props) {
+  const { children } = props;
+
+  return <div className={styles.empty}>{children}</div>;
+}
+
+export function mapItemsOrRenderEmptyItems(
+  items,
+  containerId,
+  lineNumber = "",
+  position = "",
+  numOfEmptyItems
+) {
+  return (
+    <>
+      {items.map((item) => (
+        <DraggableItem
+          key={item.id}
+          id={item.id}
+          containerId={containerId}
+          lineNumber={lineNumber}
+          position={position}
+        >
+          {position ? `${position}:` : null} {item.fullName}
+        </DraggableItem>
+      ))}
+      {Array.from({ length: Math.max(0, numOfEmptyItems - items.length) }).map(
+        (_, idx) => (
+          <EmptyItem key={`${position}_${idx}`}>
+            {position ? `${position}: ` : null}Unassigned
+          </EmptyItem>
+        )
+      )}
+    </>
+  );
+}
+
+// Add for defualt styling from @dnd-kit
+// import { CSS } from "@dnd-kit/utilities";
+// const style = transform
+//   ? {
+//       transform: CSS.Translate.toString(transform),
+//     }
+//   : undefined;

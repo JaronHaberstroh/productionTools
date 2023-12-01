@@ -1,21 +1,31 @@
 import Container from "../ui/Container";
 import DroppableContainer from "../dragAndDrop/DroppableContaier";
-
+import DraggableItem, { EmptyItem } from "../dragAndDrop/DraggableItem";
 import Header from "../ui/Header";
-import { useState } from "react";
 
 export default function EmployeeList(props) {
-  return (
-    <Container>
-      <Header key={`Header_${props.title}`}>{props.title}</Header>
+  const { id, containerId, style, className, title } = props;
 
-      <DroppableContainer
-        id={props.id}
-        containerId={props.containerId}
-        title={props.title}
-        items={props.items}
-        empty={props.empty}
-      />
+  return (
+    <Container style={style} className={className}>
+      <Header key={`Header_${title}`}>{title}</Header>
+
+      <DroppableContainer id={id} containerId={containerId}>
+        {mapItemsOrRenderEmptyItems(props)}
+      </DroppableContainer>
     </Container>
+  );
+}
+
+function mapItemsOrRenderEmptyItems(props) {
+  const { items, containerId, empty } = props;
+  return items.length > 0 ? (
+    items.map((item) => (
+      <DraggableItem key={item.id} id={item.id} containerId={containerId}>
+        {item.fullName}
+      </DraggableItem>
+    ))
+  ) : (
+    <EmptyItem>{empty}</EmptyItem>
   );
 }

@@ -4,6 +4,23 @@
   padding: 5px;
   background-color: var(--button-background);
   color: var(--button-text);
+  box-shadow: 1px 1px 4px 1px var(--shadow-color);
 }
 
+.item:hover {
+  cursor: grab;
+}
 
+.item:active {
+  cursor: grabbing;
+  opacity: .7;
+}
+
+.empty {
+  padding: 7px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: inset 1px 1px 4px 1px var(--shadow-color);
+  color: var(--button-text);
+  background: var(--button-hover-background);
+}

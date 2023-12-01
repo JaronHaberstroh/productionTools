@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react";
-import useDndContainers from "@/lib/hooks/useDndContainers";
+import useDndContainers, { findEmployee } from "@/lib/hooks/useDndContainers";
 
 import ScheduleContainer from "@/components/schedule/ScheduleContainer";
 import EmployeeList from "@/components/employeeList/EmployeeList";
-import Layout from "@/components/layout/layout";
+import Layout from "@/components/layout/Layout";
 import { Item } from "@/components/dragAndDrop/DraggableItem";
 
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
 
 import { fetchData } from "@/lib/api/userApi";
+import filterObjByKey from "@/lib/utils/filterObjByKey";
+
+import styles from "./index.module.css";
 
 export default function HomePage() {
-  const [activeId, setActiveId] = useState(null);
+  const [active, setActive] = useState(null);
   const [scheduleDate, updateStartDate] = useManageTime();
 
   const [employeeList, setEmployeeList] = useState([]);
   const [containers, setContainers, handleDragEnd] = useDndContainers(
     employeeList,
-    setActiveId
+    setActive
   );
 
   useEffect(() => {
@@ -27,35 +30,52 @@ export default function HomePage() {
   return (
     <Layout>
       <DndContext
-        onDragEnd={handleDragEnd}
-        onDragStart={(e) => handleDragStart(e, setActiveId)}
+        onDragStart={(e) => {
+          handleDragStart(e, setActive, employeeList);
+        }}
+        onDragEnd={(e) => {
+          handleDragEnd(e);
+          setActive(null);
+        }}
+        collisionDetection={closestCenter}
+        autoScroll={false}
       >
-        <EmployeeList
-          key="employeeList"
-          id="employeeList"
-          containerId="employeeList"
-          title="Employee List"
-          items={containers.employeeList}
-          empty="ALL EMPLOYEES ASSIGNED"
-        />
-
         <ScheduleContainer
           key="scheduleContainer"
           id="scheduleContainer"
           shift="B"
           time="6PM to 6AM"
           dateRange={`${scheduleDate.startDate.toLocaleDateString()} - ${scheduleDate.endDate.toLocaleDateString()}`}
-          sections={filterObjectByKey(containers, "employeeList")}
+          sections={filterObjByKey(containers, [
+            "employeeList",
+            "absentList",
+            "supervisorList",
+          ])}
+          supervisorList={containers.supervisorList}
           empty="Operator: Unassigned"
+          style={{ gridColumn: "span 3" }}
         />
-        {/* TODO: Fix Broken DragOverlay */}
+        <EmployeeList
+          key="absentList"
+          id="absentList"
+          containerId="absentList"
+          title="Absent"
+          items={containers.absentList}
+          empty="NO REPORTED CALL OFFS."
+        />
+        <EmployeeList
+          key="employeeList"
+          id="employeeList"
+          containerId="employeeList"
+          title="Employee List"
+          items={containers.employeeList}
+          className={styles.hideOnPrint}
+          empty="All employees assigned"
+        />
         <DragOverlay>
-          {activeId ? (
-            <Item
-              key={`DragOverlay_${activeId}`}
-              id={`DragOverlay_${activeId}`}
-            >
-              {employeeList.fullName}
+          {active ? (
+            <Item key={`DragOverlay_${active}`} id={`DragOverlay_${active}`}>
+              {active.fullName}
             </Item>
           ) : null}
         </DragOverlay>
@@ -64,8 +84,10 @@ export default function HomePage() {
   );
 }
 
-function handleDragStart(e, setActiveId) {
-  setActiveId(e.active.id);
+function handleDragStart(e, setActiveId, employeeList) {
+  const { active } = e;
+  const employee = findEmployee(employeeList, active);
+  setActiveId(employee);
 }
 
 async function fetchDataFromServer(setEmployeeList, setContainers) {
@@ -86,11 +108,6 @@ async function fetchDataFromServer(setEmployeeList, setContainers) {
   } catch (err) {
     console.error(err);
   }
-}
-
-function filterObjectByKey(obj, excludedKey) {
-  const { [excludedKey]: omit, ...result } = obj;
-  return result;
 }
 
 function useManageTime() {
