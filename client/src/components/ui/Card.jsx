@@ -1,11 +1,11 @@
 import styles from "./card.module.css";
 
-const Card = (props) => {
+export default function Card(props) {
+  const { style, children } = props;
+
   return (
-    <div className={styles.card} style={props.style}>
-      {props.children}
+    <div className={styles.card} style={style}>
+      {children}
     </div>
   );
-};
-
-export default Card;
+}

@@ -3,14 +3,15 @@ import ScheduleSection from "./ScheduleSection";
 import ScheduleHeader from "./ScheduleHeader";
 
 export default function ScheduleContainer(props) {
+  const { style, shift, time, dateRange, empty } = props;
   const { sections, supervisorList } = props;
 
   return (
-    <Container style={props.style}>
+    <Container style={style}>
       <ScheduleHeader
-        shift={props.shift}
-        time={props.time}
-        dateRange={props.dateRange}
+        shift={shift}
+        time={time}
+        dateRange={dateRange}
         items={supervisorList}
       />
       {Object.entries(sections).map(([key, values]) => (
@@ -19,7 +20,7 @@ export default function ScheduleContainer(props) {
           id={`${key}_Container`}
           containerId={key}
           items={values}
-          empty={props.empty}
+          empty={empty}
         />
       ))}
     </Container>

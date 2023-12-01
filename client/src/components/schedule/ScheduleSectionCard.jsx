@@ -30,6 +30,15 @@ function renderContainerGroup(props, isInspector, repeatEmptyItem) {
 
 function renderDroppableContainer(props, key, items, numOfEmptyItems) {
   const { containerId, lineNumber } = props;
+
+  const args = {
+    items: items,
+    containerId: containerId,
+    lineNumber: lineNumber,
+    position: key,
+    numOfEmptyItems: numOfEmptyItems,
+  };
+
   return (
     <DroppableContainer
       key={generateKey(props, key)}
@@ -38,13 +47,7 @@ function renderDroppableContainer(props, key, items, numOfEmptyItems) {
       lineNumber={lineNumber}
       position={key}
     >
-      {mapItemsOrRenderEmptyItems(
-        items,
-        containerId,
-        lineNumber,
-        key,
-        numOfEmptyItems
-      )}
+      {mapItemsOrRenderEmptyItems(args)}
     </DroppableContainer>
   );
 }

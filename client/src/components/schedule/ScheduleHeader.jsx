@@ -1,8 +1,4 @@
-import {
-  DraggableContainer,
-  Item,
-  mapItemsOrRenderEmptyItems,
-} from "../dragAndDrop/DraggableItem";
+import { mapItemsOrRenderEmptyItems } from "../dragAndDrop/DraggableItem";
 import DroppableContainer from "../dragAndDrop/DroppableContaier";
 
 import styles from "./scheduleHeader.module.css";
@@ -25,6 +21,12 @@ export default function ScheduleHeader(props) {
 function renderSupervisorContainer(items) {
   const containerId = "supervisorList";
 
+  const args = {
+    items: items,
+    containerId: containerId,
+    numOfEmptyItems: "2",
+  };
+
   return (
     <div className={styles.super}>
       <p>Supervisors:</p>
@@ -34,7 +36,7 @@ function renderSupervisorContainer(items) {
         containerId={containerId}
         className={styles.super}
       >
-        {mapItemsOrRenderEmptyItems(items, containerId, "", "", "2")}
+        {mapItemsOrRenderEmptyItems(args)}
       </DroppableContainer>
     </div>
   );

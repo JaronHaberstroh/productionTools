@@ -19,14 +19,8 @@ export default function DraggableItem(props) {
 }
 
 export function DraggableContainer(props) {
-  const {
-    id,
-    containerId,
-    lineNumber,
-    position,
-    children,
-    element: Element = "div",
-  } = props;
+  const { id, containerId, lineNumber, position, children, element } = props;
+  const Element = element || "div";
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
@@ -52,13 +46,10 @@ export function EmptyItem(props) {
   return <div className={styles.empty}>{children}</div>;
 }
 
-export function mapItemsOrRenderEmptyItems(
-  items,
-  containerId,
-  lineNumber = "",
-  position = "",
-  numOfEmptyItems
-) {
+export function mapItemsOrRenderEmptyItems(args = {}) {
+  const { items, containerId, lineNumber, position, empty, numOfEmptyItems } =
+    args;
+
   return (
     <>
       {items.map((item) => (
@@ -75,7 +66,8 @@ export function mapItemsOrRenderEmptyItems(
       {Array.from({ length: Math.max(0, numOfEmptyItems - items.length) }).map(
         (_, idx) => (
           <EmptyItem key={`${position}_${idx}`}>
-            {position ? `${position}: ` : null}Unassigned
+            {position ? `${position}: ` : null}
+            {empty ? empty : "Unassigned"}
           </EmptyItem>
         )
       )}

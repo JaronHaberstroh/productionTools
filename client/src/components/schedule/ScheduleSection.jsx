@@ -11,37 +11,45 @@ export default function ScheduleSection(props) {
 
   return (
     <div className={styles.section}>
-      {Object.entries(items).map(([key, values]) => (
-        <Card key={`Card_${containerId}_${key}`}>
-          <Header key={`lineHeader_${containerId}_${key}`}>
-            {`${splitStringAndCapitalizeFirstWord(containerId)} ${key}`}
-          </Header>
+      {Object.entries(items).map(([key, values]) => {
+        const args = {
+          containerId: containerId,
+          lineNumber: key,
+          items: values,
+        };
+        const extraArgs = {
+          repeatEmptyItem: 3,
+          className: "hotEndCard",
+        };
 
-          {/* Render Cold End Cards */}
-          {containerId === "coldEnds" && renderSecctionCard(props, key, values)}
+        return (
+          <Card key={`Card_${containerId}_${key}`}>
+            <Header key={`lineHeader_${containerId}_${key}`}>
+              {`${splitStringAndCapitalizeFirstWord(containerId)} ${key}`}
+            </Header>
 
-          {/* Render Hot End Cards */}
-          {containerId === "hotEnds" &&
-            renderSecctionCard(props, key, values, {
-              repeatEmptyItem: 3,
-              className: "hotEndCard",
-            })}
-        </Card>
-      ))}
+            {/* Render Cold End Cards */}
+            {containerId === "coldEnds" && renderSectionCard(args)}
+
+            {/* Render Hot End Cards */}
+            {containerId === "hotEnds" && renderSectionCard(args, extraArgs)}
+          </Card>
+        );
+      })}
     </div>
   );
 }
 
-function renderSecctionCard(props, key, items, extraProps = {}) {
-  const { containerId } = props;
-  const { repeatOperItem, repeatEmptyItem, className } = extraProps;
+function renderSectionCard(args, extraArgs = {}) {
+  const { containerId, lineNumber, items } = args;
+  const { repeatOperItem, repeatEmptyItem, className } = extraArgs;
 
   return (
     <ScheduleSectionCard
-      key={`${containerId}${key}`}
-      id={`${containerId}${key}`}
+      key={`${containerId}${lineNumber}`}
+      id={`${containerId}${lineNumber}`}
       containerId={containerId}
-      lineNumber={key}
+      lineNumber={lineNumber}
       items={items}
       repeatOperItem={repeatOperItem || "1"}
       repeatEmptyItem={repeatEmptyItem || "1"}
