@@ -1,8 +1,10 @@
-const SectionInput = ({ id, label, inputName, sectionOptions }) => {
+export default function SectionInput(props) {
+  const { id, label, name, sectionOptions } = props;
+
   return (
     <>
-      <label htmlFor={inputName}>{label}</label>
-      <select name={inputName} id={id || inputName}>
+      <label htmlFor={name}>{label}</label>
+      <select name={name} id={id || name}>
         {sectionOptions.map((option, idx) => (
           <option key={idx} value={option}>
             {option}
@@ -11,6 +13,4 @@ const SectionInput = ({ id, label, inputName, sectionOptions }) => {
       </select>
     </>
   );
-};
-
-export default SectionInput;
+}

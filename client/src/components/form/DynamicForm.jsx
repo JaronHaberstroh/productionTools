@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, Fragment } from "react";
+import { useEffect, useRef, useState } from "react";
 import { sendData } from "@/lib/api/userApi";
 import styles from "@/components/form/form.module.css";
 import TextInput from "@/components/form/formInput/TextInput";
@@ -6,7 +6,8 @@ import DateInput from "@/components/form/formInput/DateInput";
 import RadioInput from "@/components/form/formInput/RadioInput";
 import SectionInput from "./formInput/SectionInput";
 
-export default function DynamicForm({ legendText, buttonText, formFields }) {
+export default function DynamicForm(props) {
+  const { legendText, buttonText, formFields } = props;
   const inputRef = useRef(null);
 
   const initialState = formFields.reduce((acc, field) => {
@@ -27,53 +28,14 @@ export default function DynamicForm({ legendText, buttonText, formFields }) {
     }
   }, []);
 
+  const data = { formFields, formData, setFormData, inputRef };
+
   return (
     <div className={styles.centerContainer}>
       <form className={styles.formContainer}>
         <fieldset className={styles.formSection}>
           <legend>{legendText}</legend>
-          {formFields.map((field, idx) => (
-            <fieldset key={field.name}>
-              {field.type === "text" && (
-                <TextInput
-                  name={field.name}
-                  label={field.label}
-                  value={formData[field.name]}
-                  onChange={(e) => handleChange(e, setFormData)}
-                  ref={field.name === "fName" ? inputRef : null}
-                />
-              )}
-              {field.type === "date" && (
-                <DateInput
-                  name={field.name}
-                  label={field.label}
-                  value={formData[field.name]}
-                  onChange={(e) => handleChange(e, setFormData)}
-                />
-              )}
-
-              {field.type === "radio" && (
-                <div key={field.name} className={styles.radioGroup}>
-                  <RadioInput
-                    inputName={field.name}
-                    label={field.label}
-                    radioOptions={field.options}
-                    checked={formData[field.name]}
-                    onChange={(e) => handleChange(e, setFormData)}
-                  />
-                </div>
-              )}
-              {field.type === "section" && (
-                <SectionInput
-                  inputName={field.name}
-                  label={field.label}
-                  sectionOptions={field.options}
-                  checked={formData[field.name]}
-                  onChange={(e) => handleChange(e, setFormData)}
-                />
-              )}
-            </fieldset>
-          ))}
+          {generateInputs(data)}
         </fieldset>
         <button
           className={styles.formButton}
@@ -111,5 +73,43 @@ function handleClick(
 
 function handleChange(e, setFormData) {
   const { name, value } = e.target;
+
   setFormData((prevValues) => ({ ...prevValues, [name]: value }));
+}
+
+function generateInputs(data) {
+  const { formFields, formData, setFormData, inputRef } = data;
+
+  return formFields.map((field) => {
+    const { type, name, label, options } = field;
+
+    const inputProps = {
+      name,
+      label,
+      value: formData[name],
+      onChange: (e) => handleChange(e, setFormData),
+    };
+
+    if (type === "text") {
+      inputProps.ref = name === "fName" ? inputRef : null;
+    }
+
+    if (type === "radio" || type === "section") {
+      inputProps.checked = formData[name];
+      inputProps["radio" ? "radioOptions" : "sectionOptions"] = options;
+    }
+
+    return (
+      <fieldset key={field.name}>
+        {type === "text" && <TextInput {...inputProps} />}
+        {type === "date" && <DateInput {...inputProps} />}
+        {type === "section" && <SectionInput {...inputProps} />}
+        {type === "radio" && (
+          <div key={name} className={styles.radioGroup}>
+            <RadioInput {...inputProps} />
+          </div>
+        )}
+      </fieldset>
+    );
+  });
 }

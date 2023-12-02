@@ -1,4 +1,6 @@
-const DateInput = ({ id, name, label, value, onChange }) => {
+export default function DateInput(props) {
+  const { id, name, label, value, onChange } = props;
+
   return (
     <>
       <label htmlFor={id || name}>{label}</label>
@@ -11,6 +13,4 @@ const DateInput = ({ id, name, label, value, onChange }) => {
       />
     </>
   );
-};
-
-export default DateInput;
+}

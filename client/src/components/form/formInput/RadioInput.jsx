@@ -1,28 +1,16 @@
-const RadioOption = ({ id, name, value, checked, onChange, label }) => (
-  <label key={id} id={id}>
-    <input
-      id={id}
-      name={name}
-      type="radio"
-      value={value}
-      checked={checked === value}
-      onChange={onChange}
-    />
-    {label}
-  </label>
-);
+export default function RadioInput(props) {
+  const { name, label, onChange, radioOptions, checked } = props;
 
-const RadioInput = ({ inputName, label, onChange, radioOptions, checked }) => {
   return (
     <>
-      <label key={inputName} id={inputName}>
+      <label key={name} id={name}>
         {label}
       </label>
       {radioOptions.map((option) => (
         <RadioOption
           key={`radio_${option}`}
           id={option}
-          name={inputName}
+          name={name}
           value={option}
           checked={checked}
           onChange={onChange}
@@ -31,6 +19,22 @@ const RadioInput = ({ inputName, label, onChange, radioOptions, checked }) => {
       ))}
     </>
   );
-};
+}
 
-export default RadioInput;
+function RadioOption(props) {
+  const { id, name, value, checked, onChange, label } = props;
+
+  return (
+    <label key={id} id={id}>
+      <input
+        id={id}
+        name={name}
+        type="radio"
+        value={value}
+        checked={checked === value}
+        onChange={onChange}
+      />
+      {label}
+    </label>
+  );
+}
