@@ -61,8 +61,17 @@ export default function HomePage() {
           containerId="absentList"
           title="Absent"
           items={containers.absentList}
+          className={styles.hideOnPrint}
           empty="NO REPORTED CALL OFFS."
         />
+        {/* <EmployeeList
+          key="vacationList"
+          id="vacationList"
+          containerId="vacationList"
+          title="Vacation/Scheduled"
+          items={containers.vacationList}
+          empty="NONE SCHEDULED OFF"
+        /> */}
         <EmployeeList
           key="employeeList"
           id="employeeList"

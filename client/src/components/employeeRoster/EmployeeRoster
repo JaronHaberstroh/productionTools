@@ -3,7 +3,7 @@ import DroppableContainer from "../dragAndDrop/DroppableContaier";
 import { mapItemsOrRenderEmptyItems } from "../dragAndDrop/DraggableItem";
 import Header from "../ui/Header";
 
-export default function EmployeeList(props) {
+export default function EmployeeRoster(props) {
   const { id, containerId, items, style, className, title, empty } = props;
 
   const args = { items, containerId, numOfEmptyItems: "1", empty };
